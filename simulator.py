@@ -36,6 +36,7 @@ class Light(Resource):
 
         with open('db.json', 'w') as f:
             json.dump(houseDict, f)
+        print("Light was turned {} in {} by {}".format(roomStatus, roomName, userName))
         return "Light was turned {} in {} by {}".format(roomStatus, roomName, userName)
         
 
