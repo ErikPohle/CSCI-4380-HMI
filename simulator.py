@@ -38,9 +38,42 @@ class Light(Resource):
             json.dump(houseDict, f)
         print("Light was turned {} in {} by {}".format(roomStatus, roomName, userName))
         return "Light was turned {} in {} by {}".format(roomStatus, roomName, userName)
-        
 
-api.add_resource(Light, '/')
+class CreateUser(Resource):
+    def get(self):
+        args = request.args
+        newUserID = args['userID']
+        newUserName = args['userName']
+        userKey[newUserID] = newUserName
+
+        print("New user added! Username: {} User ID: {}".format(newUserName, newUserID))
+        
+        return 200
+
+class VerifyUser(Resource):
+    def get(self):
+        args = request.args
+        newUserID = args['userID']
+        newUserName = args['userName']
+        if userKey.get(newUserID):
+            
+            # user already exists
+            print("User already exists! Username: {} User ID: {}".format(newUserName, newUserID))
+            return 200
+
+        
+        print("User does not exist! Username: {} User ID: {}".format(newUserName, newUserID))
+        return 400
+
+class Main(Resource):
+    def get(self):
+        print("House Simulator is running!")
+        return 200
+
+api.add_resource(Light, '/Lights/')
+api.add_resource(CreateUser, '/CreateUser/')
+api.add_resource(VerifyUser, '/VerifyUser/')
+api.add_resource(Main, '/')
 
 if __name__ == '__main__':
      app.run(port='5002')

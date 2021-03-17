@@ -1,1 +1,1 @@
-{"living room": false, "dining room": false, "kitchen": false, "garage": false, "bathroom": false, "bedroom": false}
+{"living room": false, "dining room": true, "kitchen": false, "garage": false, "bathroom": false, "bedroom": false}

@@ -37,6 +37,8 @@ products from Adafruit!
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_PN532.h>
+#include <Bridge.h>
+#include <HttpClient.h>
 
 // If using the breakout with SPI, define the pins for SPI communication.
 #define PN532_SCK  (2)
@@ -87,6 +89,17 @@ void setup(void) {
   nfc.SAMConfig();
   
   Serial.println("Waiting for an ISO14443A Card ...");
+
+  // verify that simulator service is running
+  HttpClient client;
+  String check_service_call = 'http://localhost:5002/';
+  client.get(check_service_call);
+  int httpCode = client.GET();
+  if(httpCode != 200) {
+    Serial.println("Error! Simulator service is not running. Please verify that the service has started!");
+    return;
+  }
+
 }
 
 
@@ -143,6 +156,13 @@ void loop(void) {
           Serial.println("Reading Block 4:");
           nfc.PrintHexChar(data, 16);
           Serial.println("");
+          int userID = 1;
+          int roomID = 2;
+
+          request_call = 'http://localhost:5002/?userID=' + userID + '&roomID=' + roomID;
+
+          HttpClient client;
+          client.get(request_call);
 		  
           // Wait a bit before reading the card again
           delay(1000);
