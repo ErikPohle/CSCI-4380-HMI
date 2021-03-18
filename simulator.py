@@ -2,16 +2,17 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from json import dumps
 import json
+import signal
+import sys
 
 app = Flask(__name__)
 api = Api(app)
-houseKey = {"1": 'living room', "2": 'dining room', "3": 'kitchen', "4": 'garage', "5": 'bathroom', "6": 'bedroom'}
-userKey = {"1": "Erik", "2": "Jackson"}
+houseKey = {}
+userKey = {}
+houseDict = {}
 class Light(Resource):
     
     def get(self):
-        f = open('db.json')
-        houseDict = json.load(f)
         args = request.args
         userID = args['userID']
         roomID = args['roomID']
@@ -34,8 +35,6 @@ class Light(Resource):
         if roomName == "" or userName == "":
             return "Room ID or user ID not valid"
 
-        with open('db.json', 'w') as f:
-            json.dump(houseDict, f)
         print("Light was turned {} in {} by {}".format(roomStatus, roomName, userName))
         return "Light was turned {} in {} by {}".format(roomStatus, roomName, userName)
 
@@ -75,5 +74,31 @@ api.add_resource(CreateUser, '/CreateUser/')
 api.add_resource(VerifyUser, '/VerifyUser/')
 api.add_resource(Main, '/')
 
+
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    saveDatabase()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+
+def saveDatabase():
+    with open('db.json', 'w') as f:
+        entire_db = {"house_status": {"room_light_status": houseDict}, "room_key": houseKey, "user_key": userKey}
+        json.dump(entire_db, f)
+
+def loadDatabase():
+    global houseDict, houseKey, userKey
+    f = open('db.json')
+    raw_data = json.load(f)
+    houseDict = raw_data['house_status']['room_light_status']
+    userKey = raw_data['user_key']
+    houseKey = raw_data['room_key']
+    print(houseDict)
+    print(userKey)
+    print(houseKey)
+
 if __name__ == '__main__':
-     app.run(port='5002')
+    loadDatabase()
+    app.run(port='5002')

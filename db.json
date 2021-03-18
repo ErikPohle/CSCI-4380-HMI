@@ -1,1 +1,1 @@
-{"living room": false, "dining room": true, "kitchen": false, "garage": false, "bathroom": false, "bedroom": false}
+{"house_status": {"room_light_status": {"living room": false, "dining room": false, "kitchen": false, "garage": false, "bathroom": false, "bedroom": false}}, "room_key": {"1": "living room", "2": "dining room", "3": "kitchen", "4": "garage", "5": "bathroom", "6": "bedroom"}, "user_key": {"1": "Erik", "2": "Jackson"}}
