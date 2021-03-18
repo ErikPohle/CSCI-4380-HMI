@@ -60,7 +60,6 @@ class VerifyUser(Resource):
             print("User already exists! Username: {} User ID: {}".format(newUserName, newUserID))
             return 200
 
-        
         print("User does not exist! Username: {} User ID: {}".format(newUserName, newUserID))
         return 400
 
@@ -69,19 +68,10 @@ class Main(Resource):
         print("House Simulator is running!")
         return 200
 
-api.add_resource(Light, '/Lights/')
-api.add_resource(CreateUser, '/CreateUser/')
-api.add_resource(VerifyUser, '/VerifyUser/')
-api.add_resource(Main, '/')
-
-
 def signal_handler(sig, frame):
-    print('You pressed Ctrl+C!')
+    print('Shutting down simulator!')
     saveDatabase()
     sys.exit(0)
-
-signal.signal(signal.SIGINT, signal_handler)
-
 
 def saveDatabase():
     with open('db.json', 'w') as f:
@@ -98,6 +88,12 @@ def loadDatabase():
     print(houseDict)
     print(userKey)
     print(houseKey)
+
+# api route definitions
+api.add_resource(Light, '/Lights/')
+api.add_resource(CreateUser, '/CreateUser/')
+api.add_resource(VerifyUser, '/VerifyUser/')
+api.add_resource(Main, '/')
 
 if __name__ == '__main__':
     loadDatabase()
