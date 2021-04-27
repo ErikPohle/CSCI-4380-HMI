@@ -79,6 +79,7 @@ class CreateUser(Resource):
             return {"code": 400, "message": "user already exists"}
 
         userKey[newUserID] = newUserName
+        saveDatabase()
 
         print("New user added! Username: {} User ID: {}".format(newUserName, newUserID))
         
@@ -88,9 +89,10 @@ class DeleteUser(Resource):
     def get(self):
         args = request.args
         userID = args['userID']
-
+        
         if userID in userKey:
             del userKey[userID]
+            saveDatabase()
             return {"code": 200, "message": "successfully deleted user"}
         
         return {"code": 400, "message": "failed to delete user"}
